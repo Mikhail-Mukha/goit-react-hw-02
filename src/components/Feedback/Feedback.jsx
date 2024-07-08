@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Feedback = ({ feedbackList }) => {
+const Feedback = ({ feedbackList, totalFeedback, positiveFeedback }) => {
   return (
     <>
       <ul>
-        <li> Good: {feedbackList.good}</li>
-        <li> Neutral: {feedbackList.neutral}</li>
-        <li> Bad: {feedbackList.bad}</li>
-        <li> Total: {feedbackList.total}</li>
-        <li> Pozitive: {feedbackList.pozitive}</li>
+        <li>Good: {feedbackList.good}</li>
+        <li>Neutral: {feedbackList.neutral}</li>
+        <li>Bad: {feedbackList.bad}</li>
+        <li>Total: {totalFeedback}</li>
+        <li>Positive: {positiveFeedback}%</li>
       </ul>
     </>
   );

@@ -1,24 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Options = ({ updateFeedback, resetFeedback }) => {
-  const [feedbackGiven, setFeedbackGiven] = useState(false);
-
-  const handleFeedbackClick = (feedbackType) => {
-    updateFeedback(feedbackType);
-    setFeedbackGiven(true);
-  };
-
-  const handleResetClick = () => {
-    resetFeedback();
-    setFeedbackGiven(false);
-  };
-
+const Options = ({ updateFeedback, resetFeedback, totalFeedback }) => {
   return (
     <>
-      <button onClick={() => handleFeedbackClick("good")}>Good</button>
-      <button onClick={() => handleFeedbackClick("neutral")}>Neutral</button>
-      <button onClick={() => handleFeedbackClick("bad")}>Bad</button>
-      {feedbackGiven && <button onClick={handleResetClick}>Reset</button>}
+      <button onClick={() => updateFeedback("good")}>Good</button>
+      <button onClick={() => updateFeedback("neutral")}>Neutral</button>
+      <button onClick={() => updateFeedback("bad")}>Bad</button>
+      {totalFeedback > 0 && <button onClick={resetFeedback}>Reset</button>}
     </>
   );
 };

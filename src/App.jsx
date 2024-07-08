@@ -5,55 +5,33 @@ import Feedback from "./components/Feedback/Feedback";
 import Notification from "./components/Notification/Notification";
 
 const App = () => {
+  const initialFeedbackState = {
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  };
+
   const [feedbackList, setFeedbackList] = useState(() => {
-    const saveData = JSON.parse(window.localStorage.getItem("feedback"));
-    if (saveData) {
-      return saveData;
-    }
-    return {
-      good: 0,
-      neutral: 0,
-      bad: 0,
-      total: 0,
-      pozitive: 0,
-    };
+    const savedData = JSON.parse(window.localStorage.getItem("feedback"));
+    return savedData || initialFeedbackState;
   });
 
   const updateFeedback = (feedbackType) => {
-    setFeedbackList((prev) => {
-      const newFeedback = {
-        ...prev,
-        [feedbackType]: prev[feedbackType] + 1,
-        total: prev.total + 1,
-      };
-      newFeedback.pozitive = (
-        (newFeedback.good / newFeedback.total) *
-        100
-      ).toFixed(2);
-      return newFeedback;
-    });
+    setFeedbackList((prev) => ({
+      ...prev,
+      [feedbackType]: prev[feedbackType] + 1,
+    }));
   };
 
   const resetFeedback = () => {
-    setFeedbackList({
-      good: 0,
-      neutral: 0,
-      bad: 0,
-      total: 0,
-      pozitive: 0,
-    });
-    setFeedbackGiven(false);
-  };
-
-  const [feedbackGiven, setFeedbackGiven] = useState(false);
-
-  const handleFeedbackClick = (feedbackType) => {
-    updateFeedback(feedbackType);
-    setFeedbackGiven(true);
+    setFeedbackList(initialFeedbackState);
   };
 
   const totalFeedback =
     feedbackList.good + feedbackList.neutral + feedbackList.bad;
+  const positiveFeedback = totalFeedback
+    ? ((feedbackList.good / totalFeedback) * 100).toFixed(2)
+    : 0;
 
   useEffect(() => {
     window.localStorage.setItem("feedback", JSON.stringify(feedbackList));
@@ -62,9 +40,17 @@ const App = () => {
   return (
     <>
       <Description />
-      <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} />
+      <Options
+        updateFeedback={updateFeedback}
+        resetFeedback={resetFeedback}
+        totalFeedback={totalFeedback}
+      />
       {totalFeedback > 0 ? (
-        <Feedback feedbackList={feedbackList} />
+        <Feedback
+          feedbackList={feedbackList}
+          totalFeedback={totalFeedback}
+          positiveFeedback={positiveFeedback}
+        />
       ) : (
         <Notification message="No feedback given" />
       )}
